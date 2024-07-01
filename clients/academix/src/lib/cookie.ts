@@ -4,16 +4,16 @@
  * @param value The value of the cookie.
  * @param days Optional. The number of days until the cookie expires.
  */
-export const setCookie = (name: string, value: string, days?: number) => {
+export const setCookie = (name: string, value: string, expiryTime?: number) => {
   if (!name || !value) {
     throw new Error("Cookie name and value are required.");
   }
 
   // Construct the expiration string if days parameter is provided
   let expires = "";
-  if (days) {
+  if (expiryTime) {
     const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    date.setTime(date.getTime() + expiryTime * 24 * 60 * 60 * 1000);
     expires = "; expires=" + date.toUTCString();
   }
 
@@ -37,7 +37,7 @@ export const getCookie = (name: string): string | null => {
 
   // Split the cookie string into parts using the provided name
   const parts: string[] = value.split(`; ${name}=`);
-  
+
   // If the cookie is found, return its value
   if (parts.length === 2) {
     const cookieValue = parts.pop();

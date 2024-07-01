@@ -4,13 +4,14 @@ import CookieSetter from "@/components/auth/CookieSetter";
 const IdentityLoginPage = async ({
   searchParams,
 }: {
-  searchParams: { guid: string };
+  searchParams: { guid: string; nextUrlPathname: string };
 }) => {
-  // Import current app's url
+  // Import current app's url from environment variables
   const currentAppUrl = process.env.NEXT_PUBLIC_CURRENT_APP_URL;
 
-  // Extract the GUID from search parameters
+  // Extract the GUID and nextUrlPathname from search parameters
   const guid = searchParams.guid;
+  const nextUrlPathname = searchParams.nextUrlPathname;
 
   if (guid) {
     // Make a request to the backend to verify guid from the authentication server
@@ -24,6 +25,7 @@ const IdentityLoginPage = async ({
 
     // Parse the response JSON to get the token and provider
     const { token, provider } = await response.json();
+
     const authCookie = {
       name: "auth",
       value: {
@@ -34,7 +36,13 @@ const IdentityLoginPage = async ({
 
     // If the response is successful, render the CookieSetter component to set the authentication cookie
     if (response.ok) {
-      return <CookieSetter cookie={authCookie} />;
+      return (
+        <CookieSetter
+          cookie={authCookie}
+          nextUrlPathname={nextUrlPathname}
+          guid={guid}
+        />
+      );
     }
   }
 

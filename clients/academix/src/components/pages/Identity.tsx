@@ -7,12 +7,13 @@ const Identity = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Import current client app's server url
+  // Import current client app's server url from environment variables
   const currentClientAppServerUrl = import.meta.env
     .VITE_CURRENT_CLIENT_APP_SERVER_URL;
 
-  // Extract the guid from search params
+  // Extract the guid and nextUrlPathname from search params
   const guid = searchParams.get("guid");
+  const nextUrlPathname = searchParams.get("nextUrlPathname");
 
   useEffect(() => {
     const verifyGuid = async () => {
@@ -38,9 +39,11 @@ const Identity = () => {
           };
 
           if (response.ok) {
-            // If response received, set the cookie and navigate the user to default login redirect route
+            // If response received, set the cookie and navigate the user to the path from where the request was made to
+            // check for new access token or to the default login redirect route when the user logs in for the first time
             setCookie("auth", JSON.stringify(authCookie));
-            navigate("/dashboard"); // Here, default login redirect route is dashboard
+            setCookie("guid", JSON.stringify(guid));
+            navigate(nextUrlPathname || "/dashboard"); // Here, default login redirect route is dashboard
           } else {
             // If guid verification fails, navigate the user to home page
             console.error("GUID verification failed");

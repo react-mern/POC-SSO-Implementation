@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
-const { generateToken } = require("../utils/jwtUtils");
+const { generateTokenPair } = require("../utils/jwtUtils");
 const InvalidatedToken = require("../models/InvalidatedToken");
 
 /**
@@ -44,7 +44,7 @@ const register = async (req, res) => {
  *
  * This function handles user login by:
  * 1. Verifying the user's email and password.
- * 2. Generating a JWT token for the user.
+ * 2. Generating a JWT token and a Refresh token for the user.
  *
  * @param {Object} req - The request object containing user credentials (email, password).
  * @param {Object} res - The response object used to send back the appropriate response.
@@ -66,12 +66,15 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    // Generate a JWT token for the user
-    const token = generateToken(user);
+    // Generate a JWT token and Refresh token for the user
+    const tokenPair = generateTokenPair(user);
 
-    // Respond with the token and user details
+    // Respond with the tokens and user details
     res.status(200).json({
-      token,
+      access_token: tokenPair.access_token,
+      refresh_token: tokenPair.refresh_token,
+      expires_in: tokenPair.expires_in,
+      provider: "credentials",
       user: { id: user._id, email: user.email, name: user.name },
     });
   } catch (error) {

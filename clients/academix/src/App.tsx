@@ -11,9 +11,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/identity" element={<Identity />} />
       <Route element={<RedirectIfAuthenticated />}>
         <Route path="/login" element={<Login />} />
-        <Route path="/identity" element={<Identity />} />
       </Route>
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />

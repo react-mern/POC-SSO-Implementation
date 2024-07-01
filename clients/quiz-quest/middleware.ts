@@ -9,9 +9,11 @@ import {
   apiRoutesPrefix,
 } from "@/routes";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function middleware(req: NextRequest) {
-  // Import Auth handler app's server url
+  // Import Auth handler app's url and it's server url from environment variables
+  const authHandlerAppUrl = process.env.NEXT_PUBLIC_AUTH_HANDLER_APP_URL;
   const authHandlerAppServerUrl =
     process.env.NEXT_PUBLIC_AUTH_HANDLER_APP_SERVER_URL;
 
@@ -21,11 +23,13 @@ export async function middleware(req: NextRequest) {
   const authCookie = cookieStore.has("auth") ? cookieStore.get("auth") : null;
 
   const { nextUrl } = req;
+  const error = nextUrl.searchParams.get("error");
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isIdentityRoute = nextUrl.pathname.startsWith(identityRoutePrefix);
   const isApiRoute = nextUrl.pathname.startsWith(apiRoutesPrefix);
 
+  // Do not run middleware for API routes
   if (isApiRoute) return;
 
   // Redirect User to the home page when cookie doesn't exist
@@ -62,10 +66,25 @@ export async function middleware(req: NextRequest) {
       );
 
       if (!response.ok) {
-        // If token is invalid or has expired, remove it from the cookies and redirect to home page
-        const response = NextResponse.redirect(new URL("/", nextUrl));
-        response.headers.set("Set-Cookie", `auth=; Max-Age=0`);
-        return response;
+        if (error) {
+          // If there's no refreshed access token,the token is invalid, remove it from the cookies and redirect to home page
+          const response = NextResponse.redirect(new URL("/", nextUrl));
+          response.headers.set("Set-Cookie", `auth=; Max-Age=0`);
+          response.headers.set("Set-Cookie", `guid=; Max-Age=0`);
+          return response;
+        }
+
+        // If token verification fails, check if the authentication handler app has refreshed the access token
+        const checkNewAccessTokenUrl = new URL(
+          `${authHandlerAppUrl}/auth/login`
+        );
+        checkNewAccessTokenUrl.searchParams.set("next", nextUrl.href);
+        checkNewAccessTokenUrl.searchParams.set(
+          "refreshedAccessTokenCheck",
+          "true"
+        );
+
+        return NextResponse.redirect(new URL(checkNewAccessTokenUrl, nextUrl));
       }
       return;
     }

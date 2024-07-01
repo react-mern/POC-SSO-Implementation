@@ -8,7 +8,7 @@ interface LogoutButtonProps {
 }
 
 export const LogoutButton = ({ children }: LogoutButtonProps) => {
-  // Import Auth handler app's url and current app's url
+  // Import Auth handler app's url and current app's url from environment variables
   const authHandlerAppUrl = process.env.NEXT_PUBLIC_AUTH_HANDLER_APP_URL;
   const currentAppUrl = process.env.NEXT_PUBLIC_CURRENT_APP_URL;
 

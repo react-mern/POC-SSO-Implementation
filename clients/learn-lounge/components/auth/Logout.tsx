@@ -9,8 +9,9 @@ const Logout = ({ next }: { next: string }) => {
   useEffect(() => {
     const logoutAndDeleteCookie = async () => {
       try {
-        // Delete the authentication cookie
+        // Delete the authentication and guid cookie
         await deleteCookie("auth");
+        await deleteCookie("guid");
 
         // Log the user out
         logout(next);

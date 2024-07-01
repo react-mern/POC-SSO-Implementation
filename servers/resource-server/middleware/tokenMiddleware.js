@@ -7,6 +7,8 @@
  */
 
 const verifyToken = async (req, res) => {
+  // Import the authentication handler app's server url from environment variables
+  const authHandlerAppServerUrl = process.env.AUTH_HANDLER_APP_SERVER_URL;
   // Extract the token from req headers and provider from req body
   const token = req.headers.authorization?.split(" ")[1];
   const provider = req.body.provider;
@@ -19,7 +21,7 @@ const verifyToken = async (req, res) => {
   try {
     // Send token to the authentication server for verification
     const response = await fetch(
-      "http://localhost:8000/api/token/verify-token",
+      `${authHandlerAppServerUrl}/api/token/verify-token`,
       {
         method: "POST",
         headers: {
@@ -32,8 +34,6 @@ const verifyToken = async (req, res) => {
 
     // Check if response indicates successful verification
     if (!response.ok) {
-      // If token is invalid or has expired, remove it from the cookies and redirect to home page
-      res.clearCookie("auth");
       return res.status(401).send("Invalid or expired token");
     }
 

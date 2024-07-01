@@ -10,10 +10,8 @@ const LoginPage = () => {
     <div className="flex flex-col items-center justify-center h-full gap-5">
       <h1 className="text-white text-3xl">Quiz Quest Login Page</h1>
 
-      {/* Link to redirect user to Auth Handler App's login page with a 'next' parameter */}
-      <Link
-        href={`${authHandlerAppUrl}/auth/login?next=${currentAppUrl}/identity`}
-      >
+      {/* Link to redirect user to Auth Handler App's login page with a 'next' parameter which is the current app's url */}
+      <Link href={`${authHandlerAppUrl}/auth/login?next=${currentAppUrl}`}>
         <Button variant="secondary">Login with Learn-Lounge</Button>
       </Link>
     </div>

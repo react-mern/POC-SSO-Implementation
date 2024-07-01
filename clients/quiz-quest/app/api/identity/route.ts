@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
-  // Import Auth handler app's server url
+  // Import Auth handler app's server url from environment variables
   const authHandlerAppServerUrl =
     process.env.NEXT_PUBLIC_AUTH_HANDLER_APP_SERVER_URL;
 
@@ -24,6 +24,7 @@ export const POST = async (req: Request) => {
 
       // If guid verification is successful, authentication server returns token & provider as a response
       const tokenData = await response.json();
+
       if (tokenData) {
         // If the token is valid, prepare and send a cookie object to be stored from the frontend
         const authCookie = {

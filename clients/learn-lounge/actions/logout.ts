@@ -2,6 +2,7 @@
 
 import { signOut } from "@/auth";
 import { currentUser } from "@/lib/auth";
+import { deleteCookie } from "./cookie";
 
 /**
  * Handles user logout by revoking authentication tokens and redirecting to the specified URL.
@@ -9,14 +10,14 @@ import { currentUser } from "@/lib/auth";
  */
 
 export const logout = async (next?: string) => {
-  // Import Auth handler app's server url
+  // Import Auth handler app's server url from environment variables
   const authHandlerAppServerUrl =
     process.env.NEXT_PUBLIC_AUTH_HANDLER_APP_SERVER_URL;
 
   // Retrieve user data from the session
   const user = await currentUser();
-  const token = user?.accessToken || user?.jwt;
-  const provider = user?.provider || "credentials";
+  const token = user?.accessToken;
+  const provider = user?.provider;
 
   // Call authentication server's logout endpoint
   await fetch(`${authHandlerAppServerUrl}/api/auth/logout`, {
@@ -28,6 +29,9 @@ export const logout = async (next?: string) => {
     body: JSON.stringify({ provider }),
   });
 
+  // Delete cookies
+  await deleteCookie("auth");
+  await deleteCookie("guid");
   // Sign out the user and redirect to the specified URL
   await signOut({ redirectTo: next ? `/?next=${next}` : "/" });
 };

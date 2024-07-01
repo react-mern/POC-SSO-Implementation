@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 /**
- * Sets a cookie 
+ * Sets a cookie
  * @param {string} cookieName - The name of the cookie to set.
  * @param {string} cookieValue - The value to set for the cookie.
  */

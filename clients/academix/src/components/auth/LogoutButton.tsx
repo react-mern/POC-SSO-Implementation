@@ -6,7 +6,7 @@ interface LogoutButtonProps {
 }
 
 export const LogoutButton = ({ children }: LogoutButtonProps) => {
-  // Import current client app's and authentication handler app's url
+  // Import current client app's and authentication handler app's url from environment variables
   const currentClientAppUrl = import.meta.env.VITE_CURRENT_CLIENT_APP_URL;
   const authHandlerAppUrl = import.meta.env.VITE_AUTH_HANDLER_APP_URL;
 

@@ -16,11 +16,10 @@ export const Social = () => {
     // Sign in with the provider and redirect the user to corresponding app that made the signin request
     signIn(provider, {
       redirectTo: next || DEFAULT_LOGIN_REDIRECT,
-    })
+    });
   };
   return (
     <div className="flex items-center w-full gap-x-2">
-
       {/* Google login button */}
       <Button
         size="lg"
