@@ -3,7 +3,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
 
 const generateTokenPair = (user) => {
-  const accessTokenExpiryDuration = 60 * 1; // 1 hour in seconds
+  const accessTokenExpiryDuration = 60 * 60; // 1 hour in seconds
   const refreshTokenExpiryDuration = 7 * 24 * 60 * 60; // 7 days in seconds
 
   const access_token = jwt.sign(

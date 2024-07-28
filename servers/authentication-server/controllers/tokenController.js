@@ -122,7 +122,7 @@ const refreshAccessToken = async (req, res) => {
   try {
     // Verify the refresh token
     const decoded = jwt.verify(refreshToken, REFRESH_SECRET_KEY);
-    const accessTokenExpiryDuration = 60 * 1; // 1 hour in seconds
+    const accessTokenExpiryDuration = 60 * 60; // 1 hour in seconds
 
     // Find the user by id
     const user = await User.findById(decoded.userId);
