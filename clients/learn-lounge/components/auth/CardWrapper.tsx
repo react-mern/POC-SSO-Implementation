@@ -9,6 +9,8 @@ import {
 import { Header } from "@/components/auth/Header";
 import { Social } from "@/components/auth/Social";
 import { BackButton } from "@/components/auth/BackButton";
+import { Suspense } from "react";
+import Loader from "@/components/Loader";
 
 interface CardWrapperProps {
   children: React.ReactNode;
@@ -34,7 +36,9 @@ export const CardWrapper = ({
 
       {showSocial && (
         <CardFooter>
-          <Social />
+          <Suspense fallback={<Loader />}>
+            <Social />
+          </Suspense>
         </CardFooter>
       )}
 
