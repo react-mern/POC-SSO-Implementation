@@ -9,7 +9,6 @@ import {
   apiRoutesPrefix,
 } from "@/routes";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function middleware(req: NextRequest) {
   // Import Auth handler app's url and it's server url from environment variables
